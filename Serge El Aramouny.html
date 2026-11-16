@@ -1,0 +1,612 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Serge El Aramouny</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a product-spec document. Narrow label column on the left, content on the right; experience reads like a release log. */
+:root {
+  --bg: #F5F7F8;
+  --surface: #FFFFFF;
+  --fg: #13212B;
+  --muted: #566774;
+  --line: #D9E0E5;
+  --accent: #0B6B73;
+  --accent-fg: #FFFFFF;
+  --accent-soft: #DDF0F0;
+  --mark: #FFF1BF;
+  --mark-fg: #5B4300;
+  --font-display: "Bricolage Grotesque", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0D1519; --surface: #141F25; --fg: #E6EEF2; --muted: #93A4AE; --line: #25343C;
+    --accent: #4CC2C9; --accent-fg: #06262A; --accent-soft: #143338; --mark: #3A3110; --mark-fg: #F2D77A;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0D1519; --surface: #141F25; --fg: #E6EEF2; --muted: #93A4AE; --line: #25343C;
+  --accent: #4CC2C9; --accent-fg: #06262A; --accent-soft: #143338; --mark: #3A3110; --mark-fg: #F2D77A;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font: 400 1rem/1.65 var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+body::before {
+  content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px);
+  background: var(--bg); z-index: 30;
+}
+a { color: var(--accent); text-underline-offset: 3px; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; line-height: 1.15; }
+p { margin: 0; }
+ul { margin: 0; padding: 0; list-style: none; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 3px; }
+
+.wrap {
+  max-width: 1040px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.mono { font-family: var(--font-mono); font-size: 0.8rem; letter-spacing: 0.02em; }
+.label { font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+
+/* placeholder highlight */
+.ph { background: var(--mark); color: var(--mark-fg); border-radius: 3px; padding: 0 3px; }
+
+/* header */
+.top {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20;
+  background: var(--bg); border-bottom: 1px solid var(--line);
+}
+.top .wrap { display: flex; align-items: center; gap: 24px; min-height: 56px; }
+.brand { font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; white-space: nowrap; color: var(--fg); text-decoration: none; }
+.nav { display: flex; gap: 4px; overflow-x: auto; min-width: 0; margin-left: auto; scrollbar-width: none; }
+.nav::-webkit-scrollbar { display: none; }
+.nav a { color: var(--muted); text-decoration: none; font-size: 0.9rem; padding: 8px 10px; border-radius: 6px; white-space: nowrap; }
+.nav a:hover { color: var(--fg); background: var(--accent-soft); }
+
+/* hero */
+.hero { padding-block: 72px 56px; }
+.status {
+  display: inline-flex; align-items: center; gap: 10px;
+  border: 1px solid var(--line); background: var(--surface); border-radius: 999px;
+  padding: 6px 14px; font-size: 0.85rem; color: var(--muted);
+}
+.status i { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex: none; }
+.hero h1 { font-size: clamp(2.5rem, 7vw, 4.5rem); font-weight: 700; letter-spacing: -0.02em; margin-top: 24px; }
+.hero .role { font-family: var(--font-mono); font-size: clamp(0.95rem, 2.4vw, 1.15rem); color: var(--accent); margin-top: 12px; }
+.hero .lede { max-width: 62ch; font-size: 1.15rem; margin-top: 24px; }
+.actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  font: 500 0.95rem var(--font-body); padding: 11px 20px; border-radius: 6px; cursor: pointer;
+  text-decoration: none; border: 1px solid var(--accent); background: var(--accent); color: var(--accent-fg);
+}
+.btn:hover { filter: brightness(1.08); }
+.btn.ghost { background: transparent; color: var(--accent); }
+.btn.ghost:hover { background: var(--accent-soft); filter: none; }
+.btn[disabled] { opacity: 0.6; cursor: default; }
+
+/* sections */
+.sec { border-top: 1px solid var(--line); padding-block: 56px; scroll-margin-top: 64px; }
+.sec-grid { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 32px; }
+.sec-head h2 { font-size: 1.6rem; font-weight: 600; }
+.sec-head .label { margin-top: 8px; }
+.sec-body { min-width: 0; }
+
+/* summary */
+.about { display: grid; gap: 16px; max-width: 66ch; }
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px; margin-top: 32px; }
+.facts div { border-top: 1px solid var(--line); padding-top: 12px; }
+.facts dt { font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.facts dd { margin: 4px 0 0; font-weight: 500; }
+.facts { margin-block-end: 0; }
+dl { margin: 0; }
+
+/* experience */
+.entry { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 24px; padding-block: 28px; border-top: 1px solid var(--line); }
+.entry:first-child { border-top: 0; padding-top: 0; }
+.entry:last-child { padding-bottom: 0; }
+.when { color: var(--muted); padding-top: 4px; }
+.entry h3 { font-size: 1.25rem; font-weight: 600; }
+.org { color: var(--muted); margin-top: 2px; }
+.entry .ctx { margin-top: 12px; max-width: 66ch; }
+.bullets { display: grid; gap: 8px; margin-top: 12px; max-width: 66ch; }
+.bullets li { padding-left: 18px; position: relative; }
+.bullets li::before { content: ""; position: absolute; left: 0; top: 0.8em; width: 8px; height: 2px; background: var(--accent); }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.chips li { font-family: var(--font-mono); font-size: 0.78rem; background: var(--accent-soft); color: var(--fg); border-radius: 4px; padding: 4px 10px; }
+.stack { margin-top: 12px; font-size: 0.9rem; color: var(--muted); }
+
+/* selected work */
+.case { padding-block: 28px; border-top: 1px solid var(--line); }
+.case:first-child { border-top: 0; padding-top: 0; }
+.case:last-child { padding-bottom: 0; }
+.case h3 { font-size: 1.25rem; font-weight: 600; }
+.case .meta { color: var(--muted); margin-top: 2px; font-size: 0.9rem; }
+.case dl { display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 12px 24px; margin-top: 16px; max-width: 72ch; }
+.case dt { font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); padding-top: 4px; }
+.case dd { margin: 0; }
+
+/* skills */
+.skills { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 32px; }
+.skills h3 { font-family: var(--font-mono); font-size: 0.75rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); border-top: 1px solid var(--line); padding-top: 12px; }
+.tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.tags li { font-size: 0.88rem; border: 1px solid var(--line); background: var(--surface); border-radius: 4px; padding: 3px 10px; }
+
+/* education / languages */
+.edu { padding-block: 24px; border-top: 1px solid var(--line); display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 24px; }
+.edu:first-child { border-top: 0; padding-top: 0; }
+.edu:last-child { padding-bottom: 0; }
+.edu h3 { font-size: 1.15rem; font-weight: 600; }
+.edu p { color: var(--muted); margin-top: 2px; }
+.edu .more { color: var(--fg); margin-top: 10px; max-width: 66ch; }
+.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 32px; }
+.two h3 { font-size: 1.05rem; font-weight: 600; margin-bottom: 12px; }
+.plain li { display: flex; justify-content: space-between; gap: 16px; padding-block: 8px; border-top: 1px solid var(--line); }
+.plain li:first-child { border-top: 0; }
+.plain span:last-child { color: var(--muted); text-align: right; }
+
+/* contact */
+.contact-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; }
+.contact-copy { display: grid; gap: 16px; align-content: start; max-width: 44ch; }
+.links { display: grid; gap: 8px; margin-top: 8px; }
+.links li { display: flex; gap: 12px; }
+.links .label { width: 84px; flex: none; padding-top: 3px; }
+form { display: grid; gap: 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 24px; min-width: 0; }
+.row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+.field { display: grid; gap: 6px; min-width: 0; }
+.field label { font-size: 0.85rem; font-weight: 500; }
+input, textarea {
+  font: inherit; color: var(--fg); background: var(--bg); border: 1px solid var(--line);
+  border-radius: 6px; padding: 10px 12px; width: 100%; min-width: 0;
+}
+textarea { min-height: 140px; resize: vertical; }
+input:focus-visible, textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.note { font-size: 0.9rem; color: var(--muted); }
+.note.ok { color: var(--accent); font-weight: 500; }
+.note.err { color: var(--fg); }
+.unavail { background: var(--accent-soft); border-radius: 8px; padding: 14px 16px; font-size: 0.92rem; }
+
+/* owner inbox */
+.inbox { margin-top: 40px; border-top: 1px solid var(--line); padding-top: 24px; }
+.inbox h3 { font-size: 1.1rem; font-weight: 600; }
+.msg { border: 1px solid var(--line); background: var(--surface); border-radius: 8px; padding: 16px; margin-top: 12px; }
+.msg .who { font-weight: 600; }
+.msg .meta { color: var(--muted); font-size: 0.85rem; margin-top: 2px; overflow-wrap: anywhere; }
+.msg p { margin-top: 10px; white-space: pre-wrap; overflow-wrap: anywhere; }
+
+footer { border-top: 1px solid var(--line); padding-block: 32px; color: var(--muted); font-size: 0.9rem; }
+
+@media (max-width: 760px) {
+  .hero { padding-block: 48px 40px; }
+  .sec { padding-block: 40px; }
+  .sec-grid { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+  .entry, .edu { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+  .case dl { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+  .case dd { margin-bottom: 12px; }
+  .contact-grid { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  form { padding: 18px; }
+  .top .wrap { gap: 12px; }
+}
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#top">Serge El Aramouny</a>
+    <nav class="nav" aria-label="Sections">
+      <a href="#summary">Summary</a>
+      <a href="#experience">Experience</a>
+      <a href="#work">Selected work</a>
+      <a href="#skills">Skills</a>
+      <a href="#education">Education</a>
+      <a href="#more">Languages</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap">
+      <p class="status"><i></i>Open to technical product manager roles</p>
+      <h1>Serge El Aramouny</h1>
+      <p class="role">Technical Product Manager · Cybersecurity and IAM · New York, NY</p>
+      <p class="lede">Senior cybersecurity consultant turned product manager. I lead identity and access transformations from requirements to go-live, and I'm moving fully into technical product management.</p>
+      <div class="actions">
+        <a class="btn" href="#contact">Send me a message</a>
+        <a class="btn ghost" href="#experience">See my experience</a>
+        <a class="btn ghost" data-link="resume" href="#" hidden>Download resume</a>
+        <a class="btn ghost" data-link="linkedin" href="#" hidden>LinkedIn</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="summary">
+    <div class="wrap sec-grid">
+      <div class="sec-head"><h2>Summary</h2><p class="label">Who I am</p></div>
+      <div class="sec-body">
+        <div class="about">
+          <p>I have more than nine years in cybersecurity and product management, leading complex identity and access management (IAM) transformations that sit between business and technology teams. I'm strongest in Identity Governance and Administration (IGA), risk and compliance, with hands-on delivery across SailPoint, One Identity Manager and Usercube.</p>
+          <p>My work is turning governance and security requirements into a backlog the team can deliver: defining the roadmap, running Agile delivery, aligning senior stakeholders and reporting on milestones, risks and compliance. I started in systems and network administration, so I'm comfortable in the technical detail as well as the steering committee.</p>
+          <p>I'm looking for a technical product manager role where [what you want next, e.g. identity, security or platform products] is at the core of the product. [Add one sentence on what draws you to product management.]</p>
+        </div>
+        <dl class="facts">
+          <div><dt>Experience</dt><dd>9+ years in cybersecurity, IAM and product</dd></div>
+          <div><dt>Domains</dt><dd>IAM / IGA, risk and compliance, cybersecurity</dd></div>
+          <div><dt>Platforms</dt><dd>SailPoint, One Identity Manager, Usercube</dd></div>
+          <div><dt>Based in</dt><dd>New York, NY</dd></div>
+          <div><dt>Work authorization</dt><dd>Authorized to work in the US, no sponsorship required</dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="experience">
+    <div class="wrap sec-grid">
+      <div class="sec-head"><h2>Experience</h2><p class="label">Most recent first</p></div>
+      <div class="sec-body">
+        <article class="entry">
+          <div class="when mono">Jan 2026 – Sep 2026</div>
+          <div>
+            <h3>Product Manager, IAM/IGA</h3>
+            <p class="org">Formind · Paris, France</p>
+            <p class="ctx">[Add the client, sector, team size and the IGA platform you delivered on.]</p>
+            <ul class="bullets">
+              <li>Directed the IAM/IGA implementation as the main link between the client and stakeholders across several business units.</li>
+              <li>Built and maintained Agile backlogs, sprint plans and delivery roadmaps, turning cybersecurity and governance requirements into prioritised workstreams.</li>
+              <li>Reported regularly to senior management and client stakeholders on milestones, risks and compliance KPIs throughout the project.</li>
+              <li>Coordinated functional and integration testing, including acceptance criteria and sign-off.</li>
+              <li>Ran a quantitative risk analysis on access governance data to find gaps in the process.</li>
+            </ul>
+            <ul class="chips">
+              <li>[Add a result, e.g. users onboarded or time saved]</li>
+              <li>[Add a result]</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="entry">
+          <div class="when mono">Apr 2021 – Jan 2026</div>
+          <div>
+            <h3>Senior Cybersecurity Consultant</h3>
+            <p class="org">I-Tracing Group · Paris, France</p>
+            <p class="ctx">[Add the clients, sectors and typical project size.]</p>
+            <ul class="bullets">
+              <li>Managed SailPoint Identity Security Cloud (ISC) and One Identity Manager transformation projects end to end, from requirements and solution design to deployment and post-go-live support.</li>
+              <li>Led the technical teams building SailPoint ISC connectors and enterprise integrations, keeping quality and timelines on track.</li>
+              <li>Was the single point of contact for IT, legal and business stakeholders, coordinated consultant teams and mentored junior consultants.</li>
+              <li>Automated IAM workflows and redesigned processes with custom scripts and APIs, reducing manual provisioning. Led access recertification, entitlement reviews, non-employee risk management (SailPoint NERM) and regulatory audit support.</li>
+              <li>Led Level 3 incident resolution on Usercube (provisioning, identity synchronisation, access rights) within SLAs, maintained technical documentation and delivered IAM profile enhancements.</li>
+            </ul>
+            <ul class="chips">
+              <li>[Add a result, e.g. manual provisioning reduced by X%]</li>
+              <li>[Add a result]</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="entry">
+          <div class="when mono">Aug 2020 – Feb 2021</div>
+          <div>
+            <h3>Cybersecurity Consultant Intern</h3>
+            <p class="org">Brightway · Paris, France</p>
+            <ul class="bullets">
+              <li>Monitored security events and alerts on SIEM and security monitoring platforms, and supported incident triage, investigation, escalation and threat analysis.</li>
+              <li>Supported firewall administration, network hardening and security operations.</li>
+              <li>Deployed and configured Wazuh, SIEMonster, Forcepoint, Stormshield, Cisco Catalyst, Active Directory and GPO security controls.</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="entry">
+          <div class="when mono">Aug 2015 – Aug 2018</div>
+          <div>
+            <h3>System and Network Administrator</h3>
+            <p class="org">Valoores · Beirut, Lebanon</p>
+            <ul class="bullets">
+              <li>Administered enterprise infrastructure (servers, Active Directory, Exchange, firewalls, backups) for a multi-site organisation and its client environment, including Banque du Liban, Fransabank and CVS North America.</li>
+              <li>Managed access controls, GPOs and database security, improving the vulnerability posture across the network.</li>
+              <li>Wrote operational documentation and infrastructure procedures, and produced executive-level technical reports.</li>
+            </ul>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="work">
+    <div class="wrap sec-grid">
+      <div class="sec-head"><h2>Selected work</h2><p class="label">Problem, decision, outcome</p></div>
+      <div class="sec-body">
+        <article class="case">
+          <h3>[Project name, e.g. an IGA platform migration]</h3>
+          <p class="meta">[Client or company] · [Year] · My role: [e.g. product lead and client liaison]</p>
+          <dl>
+            <dt>Problem</dt><dd>[What was broken or missing, who felt it and how you knew. Include the evidence: audit findings, access review data, tickets.]</dd>
+            <dt>Decision</dt><dd>[The options you weighed, the trade-off you chose and why. Mention the technical constraints that shaped it, such as connectors, data quality or regulation.]</dd>
+            <dt>Outcome</dt><dd>[What shipped, what changed for users and auditors, and what you would do differently.]</dd>
+          </dl>
+          <ul class="chips"><li>[Metric 1]</li><li>[Metric 2]</li></ul>
+        </article>
+
+        <article class="case">
+          <h3>[Second project name, e.g. workflow automation with scripts and APIs]</h3>
+          <p class="meta">[Client or company] · [Year] · My role: [role]</p>
+          <dl>
+            <dt>Problem</dt><dd>[...]</dd>
+            <dt>Decision</dt><dd>[...]</dd>
+            <dt>Outcome</dt><dd>[...]</dd>
+          </dl>
+          <ul class="chips"><li>[Metric 1]</li><li>[Metric 2]</li></ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="skills">
+    <div class="wrap sec-grid">
+      <div class="sec-head"><h2>Skills</h2><p class="label">Product, security, technical</p></div>
+      <div class="sec-body">
+        <div class="skills">
+          <div>
+            <h3>Product and delivery</h3>
+            <ul class="tags">
+              <li>End-to-end delivery</li><li>Agile / Scrum</li><li>Roadmap planning</li><li>Risk management</li><li>Stakeholder reporting</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Cybersecurity and identity</h3>
+            <ul class="tags">
+              <li>Identity Governance and Administration (IGA)</li><li>IAM</li><li>SailPoint</li><li>One Identity</li><li>Usercube</li><li>CyberArk</li><li>Joiner-Mover-Leaver</li><li>RBAC</li><li>Risk and compliance</li><li>Data protection</li><li>SOC</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Technical and tools</h3>
+            <ul class="tags">
+              <li>Jira</li><li>Confluence</li><li>Azure</li><li>Active Directory</li><li>SIEM</li><li>API development</li><li>SharePoint</li><li>Unix / Linux</li><li>Windows</li><li>Cloud security</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="education">
+    <div class="wrap sec-grid">
+      <div class="sec-head"><h2>Education</h2><p class="label">Degrees and certifications</p></div>
+      <div class="sec-body">
+        <article class="edu">
+          <div class="when mono">Graduated 2020</div>
+          <div>
+            <h3>Master's degree in System and Network Security</h3>
+            <p>EPITA · Paris, France</p>
+            <p class="more">[Add your thesis or capstone topic, honours and relevant coursework.]</p>
+          </div>
+        </article>
+        <article class="edu">
+          <div class="when mono">Graduated 2015</div>
+          <div>
+            <h3>Bachelor's degree in Information Technology</h3>
+            <p>Notre Dame University (NDU) · Beirut, Lebanon</p>
+            <p class="more">[Add highlights, such as projects, clubs or distinctions.]</p>
+          </div>
+        </article>
+        <article class="edu">
+          <div class="when mono">2025</div>
+          <div>
+            <h3>SailPoint Identity Security Professional</h3>
+            <p>SailPoint · Certification</p>
+          </div>
+        </article>
+        <article class="edu">
+          <div class="when mono">2022</div>
+          <div>
+            <h3>One Identity Manager, Technical Specialist</h3>
+            <p>One Identity · Certification</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="more">
+    <div class="wrap sec-grid">
+      <div class="sec-head"><h2>Languages and interests</h2><p class="label">Beyond the job</p></div>
+      <div class="sec-body">
+        <div class="two">
+          <div>
+            <h3>Languages</h3>
+            <ul class="plain">
+              <li><span>English</span><span>Fluent</span></li>
+              <li><span>French</span><span>Fluent</span></li>
+              <li><span>Arabic</span><span>Fluent</span></li>
+            </ul>
+          </div>
+          <div>
+            <h3>Interests</h3>
+            <ul class="plain">
+              <li><span>[Hobby 1]</span><span>[one line]</span></li>
+              <li><span>[Hobby 2]</span><span>[one line]</span></li>
+              <li><span>[Hobby 3]</span><span>[one line]</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="contact">
+    <div class="wrap sec-grid">
+      <div class="sec-head"><h2>Contact</h2><p class="label">Reach me</p></div>
+      <div class="sec-body">
+        <div class="contact-grid">
+          <div class="contact-copy">
+            <p>Hiring for a technical product role? Send me a message here. I read every one and reply to the address you give me. My own email address isn't published on this page.</p>
+            <ul class="links" id="links">
+              <li><span class="label">LinkedIn</span><a data-link="linkedin" href="#" hidden>Serge El Aramouny</a><span class="ph" data-missing="linkedin">[LinkedIn URL]</span></li>
+              <li><span class="label">Resume</span><a data-link="resume" href="#" hidden>Download PDF</a><span class="ph" data-missing="resume">[Resume link]</span></li>
+              <li><span class="label">Other</span><a data-link="other" href="#" hidden>Profile</a><span class="ph" data-missing="other">[GitHub / blog URL]</span></li>
+            </ul>
+            <a class="btn ghost" id="extform" href="#" hidden>Open contact form</a>
+          </div>
+
+          <div>
+            <form id="contact-form" novalidate>
+              <div class="row">
+                <div class="field"><label for="f-name">Your name</label><input id="f-name" name="name" autocomplete="name" maxlength="120" required></div>
+                <div class="field"><label for="f-email">Your email</label><input id="f-email" name="email" type="email" autocomplete="email" maxlength="200" required></div>
+              </div>
+              <div class="field"><label for="f-company">Company or role (optional)</label><input id="f-company" name="company" maxlength="160"></div>
+              <div class="field"><label for="f-msg">Message</label><textarea id="f-msg" name="message" maxlength="3000" required></textarea></div>
+              <div><button class="btn" id="send" type="submit">Send message</button></div>
+              <p class="note" id="form-status" role="status" aria-live="polite"></p>
+            </form>
+            <p class="unavail" id="unavail" hidden>The message form isn't available in this view. Please use the links on the left to reach me.</p>
+          </div>
+        </div>
+
+        <div class="inbox" id="inbox" hidden>
+          <h3>Messages</h3>
+          <p class="note">Only you see this section.</p>
+          <div id="inbox-list"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">© 2026 Serge El Aramouny. Built as a one-page portfolio.</div>
+</footer>
+
+<script>
+(function () {
+  // Links shown on the page. Fill these in, or leave empty to show the placeholder.
+  var LINKS = { linkedin: "https://www.linkedin.com/in/serge-el-aramouny/", resume: "", other: "" };
+  // Optional: an external contact form (for example a Google Form) that works for anyone, signed in or not.
+  var CONTACT_FORM_URL = "";
+
+  // Highlight [bracketed] placeholders
+  var roots = document.querySelectorAll("main, header, footer");
+  roots.forEach(function (root) {
+    var w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode: function (n) {
+        if (n.parentElement.closest("script, style, textarea, .ph")) return NodeFilter.FILTER_REJECT;
+        return /\[[^\]]+\]/.test(n.nodeValue) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+      }
+    });
+    var nodes = [];
+    while (w.nextNode()) nodes.push(w.currentNode);
+    nodes.forEach(function (n) {
+      var frag = document.createDocumentFragment();
+      n.nodeValue.split(/(\[[^\]]+\])/).forEach(function (part) {
+        if (/^\[[^\]]+\]$/.test(part)) {
+          var s = document.createElement("span"); s.className = "ph"; s.textContent = part; frag.append(s);
+        } else if (part) frag.append(document.createTextNode(part));
+      });
+      n.replaceWith(frag);
+    });
+  });
+
+  // Links
+  Object.keys(LINKS).forEach(function (k) {
+    if (!LINKS[k]) return;
+    document.querySelectorAll('[data-link="' + k + '"]').forEach(function (a) {
+      a.href = LINKS[k]; a.hidden = false; a.target = "_blank"; a.rel = "noopener";
+    });
+    document.querySelectorAll('[data-missing="' + k + '"]').forEach(function (s) { s.hidden = true; });
+  });
+  if (CONTACT_FORM_URL) {
+    var ext = document.getElementById("extform");
+    ext.href = CONTACT_FORM_URL; ext.target = "_blank"; ext.rel = "noopener"; ext.hidden = false;
+  }
+
+  // Contact form and inbox
+  var form = document.getElementById("contact-form");
+  var statusEl = document.getElementById("form-status");
+  var sendBtn = document.getElementById("send");
+  var unavail = document.getElementById("unavail");
+  var db = null, user = null, uid = null, canWrite = false;
+
+  function say(text, cls) { statusEl.textContent = text; statusEl.className = "note" + (cls ? " " + cls : ""); }
+  function showUnavailable() { form.hidden = true; unavail.hidden = false; }
+
+  var ready = (async function () {
+    try {
+      var c = window.claude;
+      if (!c || !c.use) return;
+      db = await c.use("db");
+      user = await c.use("user");
+      if (!db || !user) { db = null; return; }
+      uid = await user.id();
+      var cw = await user.can("data.write");
+      canWrite = !!uid && cw !== false;
+      if (!canWrite) { showUnavailable(); }
+      var edit = await user.canEdit();
+      if (edit) startInbox();
+    } catch (e) { /* the form falls back to the unavailable note on submit */ }
+    if (!db) showUnavailable();
+  })();
+
+  form.addEventListener("submit", async function (ev) {
+    ev.preventDefault();
+    await ready;
+    if (!db || !uid || !canWrite) { showUnavailable(); return; }
+    var name = document.getElementById("f-name").value.trim(), email = document.getElementById("f-email").value.trim(), msg = document.getElementById("f-msg").value.trim();
+    if (!name || !msg || !/^\S+@\S+\.\S+$/.test(email)) { say("Please add your name, a valid email and a message.", "err"); return; }
+    sendBtn.disabled = true; say("Sending…");
+    var key = "m" + Date.now().toString(36);
+    var entry = { name: name, email: email, company: document.getElementById("f-company").value.trim(), message: msg, sentAt: new Date().toISOString() };
+    try {
+      var ref = db.doc("messages/" + uid);
+      try { await ref.update({ entries: (function (o) { o[key] = entry; return o; })({}) }); }
+      catch (e1) {
+        if (e1 && e1.code === "invalid_argument") { await ref.set({ entries: (function (o) { o[key] = entry; return o; })({}) }); }
+        else throw e1;
+      }
+      form.reset(); say("Message sent. Thank you, I'll reply to the email you gave.", "ok");
+    } catch (e) {
+      if (e && (e.code === "invalid_argument" || e.code === "not_granted" || e.code === "revoked")) { showUnavailable(); }
+      else say("The message could not be sent. Please try again in a moment.", "err");
+    }
+    sendBtn.disabled = false;
+  });
+
+  function startInbox() {
+    var box = document.getElementById("inbox"), list = document.getElementById("inbox-list");
+    box.hidden = false;
+    list.textContent = "Loading…";
+    db.collection("messages").onSnapshot(function (snap) {
+      var items = [];
+      snap.docs.forEach(function (d) {
+        var data = d.data() || {}, entries = data.entries || {};
+        Object.keys(entries).forEach(function (k) { items.push(entries[k]); });
+      });
+      items.sort(function (a, b) { return String(b.sentAt).localeCompare(String(a.sentAt)); });
+      list.textContent = "";
+      if (!items.length) { var p = document.createElement("p"); p.className = "note"; p.textContent = "No messages yet."; list.append(p); return; }
+      items.forEach(function (m) {
+        var el = document.createElement("div"); el.className = "msg";
+        var who = document.createElement("div"); who.className = "who"; who.textContent = m.name || "Unknown";
+        var meta = document.createElement("div"); meta.className = "meta";
+        var when = m.sentAt ? new Date(m.sentAt).toLocaleString() : "";
+        meta.textContent = [m.email, m.company, when].filter(Boolean).join(" · ");
+        var body = document.createElement("p"); body.textContent = m.message || "";
+        el.append(who, meta, body); list.append(el);
+      });
+    }, function () { list.textContent = "Messages could not be loaded."; });
+  }
+})();
+</script>
+
+</body></html>
